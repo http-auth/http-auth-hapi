@@ -1,7 +1,7 @@
 {
   "name": "http-auth-hapi",
   "description": "Hapi framework integration with http-auth module.",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "author": "Gevorg Harutyunyan (http://github.com/gevorg)",
   "maintainers": [
     {
@@ -9,6 +9,7 @@
       "email": "gevorg.ha@gmail.com"
     }
   ],
+  "homepage": "https://github.com/http-auth/http-auth-hapi",
   "repository": {
     "type": "git",
     "url": "https://github.com/http-auth/http-auth-hapi.git"
