@@ -1,7 +1,7 @@
 {
   "name": "http-auth-hapi",
   "description": "Hapi framework integration with http-auth module.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Gevorg Harutyunyan (http://github.com/gevorg)",
   "maintainers": [
     {
@@ -35,7 +35,7 @@
     "http-auth": "^2.4.1"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "scripts": {
     "test": "mocha",
