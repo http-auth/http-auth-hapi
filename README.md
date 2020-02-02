@@ -14,7 +14,7 @@ Via [npm](http://npmjs.org/):
 
 ```bash
 $ npm install http-auth-hapi
-```	
+```    
 
 ## Usage
 ```javascript
