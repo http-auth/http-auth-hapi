@@ -1,27 +1,37 @@
 // Authentication module.
-const auth =  require('http-auth');
-const koaAuth = require('../src/index');
+const auth = require('http-auth');
 
+// Setup auth.
 const basic = auth.basic({
     realm: "Simon Area.",
     file: __dirname + "/../data/users.htpasswd"
 });
 
-// Koa setup.
-const Koa = require('koa');
-const app = new Koa();
+const Hapi = require('@hapi/hapi');
 
-// Setup basic handler.
-app.use(async (ctx, next) => {
-    await next();
-    ctx.body = `Welcome to koa ${ctx.req.user}!`;
-});
+const init = async () => {
+    const server = Hapi.server({
+        port: 1337,
+        host: 'localhost'
+    });
 
-// Setup auth.
-app.use(koaAuth(basic));
+    // Register auth plugin.    
+    await server.register(require('../src/index'));
 
-// Start server.
-app.listen(1337, function () {
-    // Log URL.
-    console.log("Server running at http://127.0.0.1:1337/");
-});
+    // Setup strategy.
+    server.auth.strategy('http-auth', 'http-auth', basic);
+    server.auth.default('http-auth');
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request) => {
+            return `Welcome from Hapi - ${request.auth.credentials.name}!`;
+        }
+    });
+
+    await server.start();
+    console.log('Server running on %s', server.info.uri);
+};
+
+init();

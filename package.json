@@ -1,6 +1,6 @@
 {
-  "name": "http-auth-koa",
-  "description": "Koa framework integration with http-auth module.",
+  "name": "http-auth-hapi",
+  "description": "Hapi framework integration with http-auth module.",
   "version": "1.1.0",
   "author": "Gevorg Harutyunyan (http://github.com/gevorg)",
   "maintainers": [
@@ -12,24 +12,24 @@
   "homepage": "http://http-auth.info",
   "repository": {
     "type": "git",
-    "url": "https://github.com/http-auth/http-auth-koa.git"
+    "url": "https://github.com/http-auth/http-auth-hapi.git"
   },
   "main": "./gensrc/index.js",
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://github.com/http-auth/http-auth-koa/blob/master/LICENSE"
+      "url": "http://github.com/http-auth/http-auth-hapi/blob/master/LICENSE"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "http://github.com/http-auth/http-auth-koa/issues"
+    "url": "http://github.com/http-auth/http-auth-hapi/issues"
   },
   "devDependencies": {
+    "@hapi/hapi": "^19.0.5",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-node": "^11.0.0",
-    "koa": "^2.11.0",
     "mocha": "^7.0.1",
     "request": "^2.88.0",
     "http-auth": "^2.4.1"
@@ -42,11 +42,14 @@
     "pretest": "eslint --ignore-path .gitignore ."
   },
   "keywords": [
-    "koa",
+    "hapi",
     "http",
     "basic",
     "digest",
     "access",
     "authentication"
-  ]
+  ],
+  "dependencies": {
+    "@hapi/boom": "^9.0.0"
+  }
 }

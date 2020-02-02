@@ -1,8 +1,7 @@
-const Koa = require('koa');
+const Hapi = require('@hapi/hapi');
 
 // Source.
 const auth = require('http-auth');
-const koaAuth = require('../src/index');
 
 // Request module.
 const request = require('request');
@@ -10,10 +9,33 @@ const request = require('request');
 // Expect module.
 const expect = require('chai').expect;
 
-// Express.
-describe('koa', function () {
-    let server = undefined;
+const server = Hapi.server({
+    port: 1337,
+    host: 'localhost'
+});
 
+const init = async (basic) => {
+    // Register auth plugin.    
+    await server.register(require('../src/index'));
+
+    // Setup strategy.
+    server.auth.strategy('http-auth', 'http-auth', basic);
+    server.auth.default('http-auth');
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request) => {
+            return `Welcome to private area - ${request.auth.credentials.name}!`;
+        }
+    });
+
+    await server.start();
+    console.log('Server running on %s', server.info.uri);
+};
+
+// Express.
+describe('hapi', function () {
     before(function () {
         // Configure authentication.
         const basic = auth.basic({
@@ -30,39 +52,16 @@ describe('koa', function () {
             }
         });
 
-        // Koa setup.
-        const app = new Koa();
-
-        // Wait for error.
-        app.use(async (ctx, next) => {
-            try {
-                await next();
-            } catch (err) {
-                ctx.body = err.message;
-                ctx.status = 400;
-            }
-        });
-
-        // Setup basic handler.
-        app.use(async (ctx, next) => {
-            await next();
-            ctx.body = `Welcome to private area - ${ctx.req.user}!`;
-        });
-
-        // Setup auth.
-        app.use(koaAuth(basic));
-
-        // Start server.
-        server = app.listen(1337);
+        init(basic);
     });
 
     after(function () {
-        server.close();
+        server.stop();
     });
 
     it('error', function (done) {
         const callback = function (_error, _response, body) {
-            expect(body).to.equal("Error comes here");
+            expect(body).to.equal(`{"statusCode":400,"error":"Bad Request","message":"Error comes here"}`);
             done();
         };
 
@@ -82,7 +81,7 @@ describe('koa', function () {
 
     it('wrong password', function (done) {
         const callback = function (error, response, body) {
-            expect(body).to.equal("401 Unauthorized");
+            expect(body).to.equal(`{"statusCode":401,"error":"Unauthorized","message":"401 Unauthorized","attributes":{"error":"401 Unauthorized"}}`);
             done();
         };
 
@@ -92,7 +91,7 @@ describe('koa', function () {
 
     it('wrong user', function (done) {
         const callback = function (error, response, body) {
-            expect(body).to.equal("401 Unauthorized");
+            expect(body).to.equal(`{"statusCode":401,"error":"Unauthorized","message":"401 Unauthorized","attributes":{"error":"401 Unauthorized"}}`);
             done();
         };
 
