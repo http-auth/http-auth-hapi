@@ -1,50 +1,58 @@
-# http-auth-koa
-[Koa framework](http://koajs.com/) integration with [http-auth](https://github.com/http-auth/http-auth) module.
+# http-auth-hapi
+[Hapi framework](https://hapi.dev/) integration with [http-auth](https://github.com/http-auth/http-auth) module.
 
-[![build](https://github.com/http-auth/http-auth-koa/workflows/build/badge.svg)](https://github.com/http-auth/http-auth-koa/actions?query=workflow%3Abuild)
+[![build](https://github.com/http-auth/http-auth-hapi/workflows/build/badge.svg)](https://github.com/http-auth/http-auth-hapi/actions?query=workflow%3Abuild)
 
 ## Installation
 
 Via git (or downloaded tarball):
 
 ```bash
-$ git clone git://github.com/http-auth/http-auth-koa.git
+$ git clone git://github.com/http-auth/http-auth-hapi.git
 ```
 Via [npm](http://npmjs.org/):
 
 ```bash
-$ npm install http-auth-koa
+$ npm install http-auth-hapi
 ```	
 
 ## Usage
 ```javascript
 // Authentication module.
-const auth =  require('http-auth');
-const koaAuth = require('http-auth-koa');
+const auth = require('http-auth');
 
+// Setup auth.
 const basic = auth.basic({
     realm: "Simon Area.",
     file: __dirname + "/../data/users.htpasswd"
 });
 
-// Koa setup.
-const Koa = require('koa');
-const app = new Koa();
+const Hapi = require('@hapi/hapi');
 
-// Setup basic handler.
-app.use(async (ctx, next) => {
-    await next();
-    ctx.body = `Welcome to koa ${ctx.req.user}!`;
-});
+const init = async () => {
+    const server = Hapi.server({
+        port: 1337,
+        host: 'localhost'
+    });
 
-// Setup auth.
-app.use(koaAuth(basic));
+    // Register auth plugin.    
+    await server.register(require('http-auth-hapi'));
 
-// Start server.
-app.listen(1337, function () {
-    // Log URL.
-    console.log("Server running at http://127.0.0.1:1337/");
-});
+    // Setup strategy.
+    server.auth.strategy('http-auth', 'http-auth', basic);
+    server.auth.default('http-auth');
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return `Welcome from Hapi - ${request.auth.credentials.name}!`;
+        }
+    });
+
+    await server.start();
+    console.log('Server running on %s', server.info.uri);
+};
 ```
 
 
@@ -58,7 +66,7 @@ $ npm test
 
 ## Issues
 
-You can find list of issues using **[this link](http://github.com/http-auth/http-auth-koa/issues)**.
+You can find list of issues using **[this link](http://github.com/http-auth/http-auth-hapi/issues)**.
 
 ## Requirements
 
