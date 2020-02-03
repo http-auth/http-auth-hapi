@@ -19,40 +19,44 @@ $ npm install http-auth-hapi
 ## Usage
 ```javascript
 // Authentication module.
-const auth = require('http-auth');
+// eslint-disable-next-line node/no-unpublished-require
+const auth = require("http-auth");
 
 // Setup auth.
 const basic = auth.basic({
-    realm: "Simon Area.",
-    file: __dirname + "/../data/users.htpasswd"
+  realm: "Simon Area.",
+  file: __dirname + "/../data/users.htpasswd"
 });
 
-const Hapi = require('@hapi/hapi');
+// eslint-disable-next-line node/no-unpublished-require
+const Hapi = require("@hapi/hapi");
 
 const init = async () => {
-    const server = Hapi.server({
-        port: 1337,
-        host: 'localhost'
-    });
+  const server = Hapi.server({
+    port: 1337,
+    host: "localhost"
+  });
 
-    // Register auth plugin.    
-    await server.register(require('http-auth-hapi'));
+  // Register auth plugin.
+  await server.register(require("http-auth-hapi"));
 
-    // Setup strategy.
-    server.auth.strategy('http-auth', 'http-auth', basic);
-    server.auth.default('http-auth');
+  // Setup strategy.
+  server.auth.strategy("http-auth", "http-auth", basic);
+  server.auth.default("http-auth");
 
-    server.route({
-        method: 'GET',
-        path: '/',
-        handler: (request, h) => {
-            return `Welcome from Hapi - ${request.auth.credentials.name}!`;
-        }
-    });
+  server.route({
+    method: "GET",
+    path: "/",
+    handler: request => {
+      return `Welcome from Hapi - ${request.auth.credentials.name}!`;
+    }
+  });
 
-    await server.start();
-    console.log('Server running on %s', server.info.uri);
+  await server.start();
+  console.log("Server running on %s", server.info.uri);
 };
+
+init();
 ```
 
 
