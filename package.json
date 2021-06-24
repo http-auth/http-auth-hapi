@@ -1,7 +1,7 @@
 {
   "name": "http-auth-hapi",
   "description": "Hapi framework integration with http-auth module.",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "author": "Gevorg Harutyunyan (http://github.com/gevorg)",
   "maintainers": [
     {
@@ -26,16 +26,16 @@
     "url": "http://github.com/http-auth/http-auth-hapi/issues"
   },
   "devDependencies": {
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "prettier": "^1.19.1",
     "@hapi/hapi": "^19.0.5",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "http-auth": "^4.1.7",
     "mocha": "^7.0.1",
-    "request": "^2.88.0",
-    "http-auth": "^4.1.2"
+    "prettier": "^1.19.1",
+    "request": "^2.88.0"
   },
   "engines": {
     "node": ">=12"
